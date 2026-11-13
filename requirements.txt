@@ -1,0 +1,24 @@
+
+# ===== RAG Framework =====
+langchain-core
+langchain-community
+langchain-openai
+langchain-text-splitters
+
+# ===== PDF Processing =====
+pypdf
+
+# ===== Vector Database =====
+faiss-cpu
+scikit-learn
+
+# ===== Environment Configuration =====
+python-dotenv
+
+# ===== Web Interface =====
+streamlit
+
+# ===== Evaluation & Testing =====
+numpy
+pandas
+pytest
