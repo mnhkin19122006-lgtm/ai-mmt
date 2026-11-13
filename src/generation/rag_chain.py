@@ -1,11 +1,11 @@
 
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.retrievers import BaseRetriever
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-from src.utils.config import CHAT_API_KEY, CHAT_BASE_URL, CHAT_MODEL
+from src.utils.config import GROQ_API_KEY, GROQ_MODEL
 
 from src.retrieval.retriever import (
     retrieve_documents,
@@ -16,17 +16,16 @@ from src.generation.prompt import get_rag_prompt
 
 
 # 1. Khởi tạo LLM
-def get_llm() -> ChatOpenAI:
+def get_llm() -> ChatGroq:
 
-    if not CHAT_API_KEY or CHAT_API_KEY in {"sk-your-api-key-here", "gsk-your-api-key-here"}:
+    if not GROQ_API_KEY or GROQ_API_KEY in {"sk-your-api-key-here", "gsk-your-api-key-here"}:
         raise ValueError(
-            "Chưa cấu hình GROQ_API_KEY (hoặc CHAT_API_KEY) trong .env"
+            "Chưa cấu hình GROQ_API_KEY trong .env"
         )
 
-    llm = ChatOpenAI(
-        model=CHAT_MODEL,
-        api_key=CHAT_API_KEY,
-        base_url=CHAT_BASE_URL,
+    llm = ChatGroq(
+        model=GROQ_MODEL,
+        api_key=GROQ_API_KEY,
         temperature=0
     )
 

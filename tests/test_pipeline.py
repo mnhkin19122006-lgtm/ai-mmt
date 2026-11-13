@@ -17,15 +17,30 @@ def test_chat_provider_configuration(monkeypatch):
         captured.update(kwargs)
         return object()
 
-    monkeypatch.setattr(rag_chain, "ChatOpenAI", fake_chat)
-    monkeypatch.setattr(rag_chain, "CHAT_API_KEY", "provider-key")
-    monkeypatch.setattr(rag_chain, "CHAT_BASE_URL", "https://example.test/v1")
-    monkeypatch.setattr(rag_chain, "CHAT_MODEL", "provider-model")
+    monkeypatch.setattr(rag_chain, "ChatGroq", fake_chat)
+    monkeypatch.setattr(rag_chain, "GROQ_API_KEY", "provider-key")
+    monkeypatch.setattr(rag_chain, "GROQ_MODEL", "provider-model")
     rag_chain.get_llm()
 
     assert captured["api_key"] == "provider-key"
-    assert captured["base_url"] == "https://example.test/v1"
+    assert "base_url" not in captured
     assert captured["model"] == "provider-model"
+
+
+@pytest.mark.parametrize("key", [None, "", "gsk-your-api-key-here"])
+def test_missing_groq_key_fails_before_client_creation(monkeypatch, key):
+    monkeypatch.setattr(rag_chain, "GROQ_API_KEY", key)
+    monkeypatch.setattr(rag_chain, "ChatGroq", lambda **kwargs: pytest.fail("Unexpected client creation"))
+    with pytest.raises(ValueError, match="GROQ_API_KEY"):
+        rag_chain.get_llm()
+
+
+def test_embeddings_stay_local_with_legacy_environment(monkeypatch):
+    from src.embeddings.embedding_model import get_embedding_model
+
+    monkeypatch.setenv("EMBEDDING_PROVIDER", "openai")
+    monkeypatch.setenv("OPENAI_API_KEY", "unused-key")
+    assert isinstance(get_embedding_model(), LocalEmbeddings)
 
 
 def test_local_embeddings_are_deterministic_and_retrieve_matching_text(monkeypatch):

@@ -7,7 +7,7 @@ import streamlit as st
 from src.generation.rag_chain import generate_answer
 from src.ingestion.index_documents import build_index
 from src.retrieval.retriever import create_retriever
-from src.utils.config import EMBEDDING_PROVIDER, FAISS_INDEX_PATH, PDF_DIRECTORY, TOP_K
+from src.utils.config import FAISS_INDEX_PATH, PDF_DIRECTORY, TOP_K
 from src.vetorstore.faiss_strore import load_vector_store
 
 
@@ -41,8 +41,7 @@ with st.sidebar:
 if not index_ready:
     st.info(
         "Nhấn ‘Tạo lại chỉ mục’ để bắt đầu. "
-        + ("Embedding cục bộ không dùng OpenAI API." if EMBEDDING_PROVIDER == "local"
-           else "Bước này dùng OpenAI Embeddings API.")
+        "Embedding chạy cục bộ, không cần API key."
     )
     st.stop()
 

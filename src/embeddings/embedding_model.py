@@ -1,9 +1,7 @@
 
 from langchain_core.embeddings import Embeddings
-from langchain_openai import OpenAIEmbeddings
 from sklearn.feature_extraction.text import HashingVectorizer
 
-from src.utils.config import EMBEDDING_MODEL, EMBEDDING_PROVIDER, OPENAI_API_KEY
 
 
 class LocalEmbeddings(Embeddings):
@@ -25,18 +23,7 @@ class LocalEmbeddings(Embeddings):
 # 1. Khởi tạo Embedding Model
 def get_embedding_model() -> Embeddings:
 
-    if EMBEDDING_PROVIDER == "local":
-        return LocalEmbeddings()
-
-    if not OPENAI_API_KEY or OPENAI_API_KEY == "sk-your-api-key-here":
-        raise ValueError("Chưa cấu hình OPENAI_API_KEY trong .env")
-
-    embeddings = OpenAIEmbeddings(
-        model=EMBEDDING_MODEL,
-        api_key=OPENAI_API_KEY
-    )
-
-    return embeddings
+    return LocalEmbeddings()
 
 
 # 2. Chuyển các đoạn văn bản thành vector

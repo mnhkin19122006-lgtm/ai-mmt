@@ -8,7 +8,7 @@ Trên Windows, sau khi cài đặt bên dưới, nhấp đúp `run_app.bat` đ�
 File này ưu tiên Python trong `.venv` nếu có. Đóng cửa sổ chạy hoặc nhấn `Ctrl+C`
 để dừng ứng dụng.
 
-Yêu cầu Python 3.11 trở lên. Tạo chỉ mục mặc định dùng embedding cục bộ, không cần OpenAI API key.
+Yêu cầu Python 3.11 trở lên. Tạo chỉ mục dùng embedding cục bộ, không cần API key.
 
 ```powershell
 python -m venv .venv
@@ -22,16 +22,15 @@ Copy-Item .env.example .env
 ```dotenv
 GROQ_API_KEY=gsk-your-api-key-here
 GROQ_MODEL=openai/gpt-oss-20b
-EMBEDDING_PROVIDER=local
 ```
 
-Thay key mẫu bằng key thật. Ứng dụng mặc định gọi `https://api.groq.com/openai/v1` qua client tương thích OpenAI. Có thể đổi `GROQ_MODEL` sang model trong [danh sách Groq hỗ trợ](https://console.groq.com/docs/models). Nếu đã có `CHAT_API_KEY`, `CHAT_BASE_URL`, `CHAT_MODEL`, hãy bỏ các biến đó để dùng cấu hình Groq; chúng vẫn được ưu tiên khi có giá trị. `OPENAI_API_KEY` chỉ dùng cho embedding OpenAI tùy chọn. Thay Chat API không cần tạo lại chỉ mục. Khởi động lại ứng dụng sau khi sửa `.env`:
+Thay key mẫu bằng key thật. Ứng dụng dùng `ChatGroq` từ `langchain-groq` để gọi Groq. Model `openai/gpt-oss-20b` được phục vụ trên Groq, không gọi API của OpenAI. Có thể đổi `GROQ_MODEL` sang model trong [danh sách Groq hỗ trợ](https://console.groq.com/docs/models). Các biến `CHAT_API_KEY`, `CHAT_BASE_URL`, `CHAT_MODEL` và cấu hình embedding cũ không còn được sử dụng. Thay model chat không cần tạo lại chỉ mục. Khởi động lại ứng dụng sau khi sửa `.env`:
 
 ```powershell
 python -m streamlit run app.py
 ```
 
-Nhấn **Tạo lại chỉ mục** ở thanh bên để đọc tất cả PDF và tạo FAISS index. Mặc định, embedding cục bộ dùng đặc trưng ký tự để tìm đoạn văn liên quan và không tiêu thụ credit. Để dùng OpenAI Embeddings API, đặt `EMBEDDING_PROVIDER=openai` trong `.env` rồi tạo lại chỉ mục. Mỗi câu hỏi có tài liệu phù hợp vẫn dùng Chat API; giới hạn và chi phí tùy nhà cung cấp. Khi thêm hoặc thay PDF, nhấn nút tạo lại chỉ mục. Index được lưu trong `storage/faiss_index/`. Khi đổi `EMBEDDING_PROVIDER`, luôn tạo lại chỉ mục.
+Nhấn **Tạo lại chỉ mục** ở thanh bên để đọc tất cả PDF và tạo FAISS index. Embedding cục bộ dùng đặc trưng ký tự để tìm đoạn văn liên quan và không tiêu thụ credit API. Các bước tạo câu trả lời và viết lại câu hỏi theo lịch sử dùng Groq API. Khi thêm hoặc thay PDF, nhấn nút tạo lại chỉ mục. Index được lưu trong `storage/faiss_index/`. Nếu chỉ mục cũ được tạo bằng embedding từ API, cần tạo lại chỉ mục để dùng embedding cục bộ.
 
 Có thể tạo index bằng dòng lệnh:
 

@@ -12,22 +12,9 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 load_dotenv(BASE_DIR / ".env")
 
 
-# 3. Chat (Groq) and optional OpenAI embeddings
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
+# 3. Groq chat; embeddings run locally.
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_MODEL = os.getenv("GROQ_MODEL") or "openai/gpt-oss-20b"
-CHAT_API_KEY = os.getenv("CHAT_API_KEY") or GROQ_API_KEY
-CHAT_MODEL = os.getenv("CHAT_MODEL") or GROQ_MODEL
-CHAT_BASE_URL = os.getenv("CHAT_BASE_URL") or "https://api.groq.com/openai/v1"
-
-EMBEDDING_MODEL = os.getenv(
-    "EMBEDDING_MODEL",
-    "text-embedding-3-small"
-)
-EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "local").lower()
-if EMBEDDING_PROVIDER not in {"local", "openai"}:
-    raise ValueError("EMBEDDING_PROVIDER phải là 'local' hoặc 'openai'")
 
 
 # 4. RAG Configuration
